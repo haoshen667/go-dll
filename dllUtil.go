@@ -1,6 +1,7 @@
 package dllUtil
 
 import (
+	"golang.org/x/text/encoding/simplifiedchinese"
 	"log"
 	"syscall"
 	"unsafe"
@@ -52,6 +53,17 @@ func Str2Ptr(s string) (uintptr, error) {
 	} else {
 		return uintptr(unsafe.Pointer(b)), nil
 	}
+}
+
+// Utf82Gbk for chinese, convert encoding first @see Str2Ptr
+func Utf82Gbk(s string) string {
+	decoder := simplifiedchinese.GBK.NewEncoder()
+	res, err := decoder.String(s)
+	if err != nil {
+		log.Println(err.Error())
+		return ""
+	}
+	return res
 }
 
 // Ptr2Str convert uintptr to string
